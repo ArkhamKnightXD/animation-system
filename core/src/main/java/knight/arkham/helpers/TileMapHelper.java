@@ -3,7 +3,6 @@ package knight.arkham.helpers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -129,6 +128,7 @@ public class TileMapHelper {
 
     public void dispose(){
 
+        player.dispose();
         tiledMap.dispose();
         mapRenderer.dispose();
         world.dispose();

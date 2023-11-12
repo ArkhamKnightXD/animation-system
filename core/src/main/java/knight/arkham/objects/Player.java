@@ -32,21 +32,21 @@ public class Player extends GameObject {
         previousState = AnimationState.STANDING;
         actualState = AnimationState.STANDING;
 
-        standingAnimation = makeAnimationByFrameRange(atlas.findRegion("Idle"), 1, 10, 0.1f);
+        standingAnimation = makeAnimationByFrameRange(atlas.findRegion("Idle"), 10);
 
         jumpingRegion = new TextureRegion(atlas.findRegion("Jump"), 0, 0, 32, 32);
 
-        runningAnimation = makeAnimationByFrameRange(atlas.findRegion("Run"), 1, 10, 0.1f);
+        runningAnimation = makeAnimationByFrameRange(atlas.findRegion("Run"), 10);
     }
 
-    private Animation<TextureRegion> makeAnimationByFrameRange(TextureRegion characterRegion, int initialFrame, int finalFrame, float frameDuration) {
+    private Animation<TextureRegion> makeAnimationByFrameRange(TextureRegion characterRegion, int finalFrame) {
 
         Array<TextureRegion> animationFrames = new Array<>();
 
-        for (int i = initialFrame; i <= finalFrame; i++)
+        for (int i = 1; i <= finalFrame; i++)
             animationFrames.add(new TextureRegion(characterRegion, i * 32, 0, 32, 32));
 
-        return new Animation<>(frameDuration, animationFrames);
+        return new Animation<>(0.1f, animationFrames);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Player extends GameObject {
 
     public void update(float deltaTime) {
 
-        setActualRegion(getAnimationRegion(deltaTime));
+        actualRegion = getAnimationRegion(deltaTime);
 
         if (Gdx.input.isKeyPressed(Input.Keys.D) && body.getLinearVelocity().x <= 10)
             applyLinealImpulse(new Vector2(5, 0));
@@ -107,7 +107,7 @@ public class Player extends GameObject {
             case FALLING:
             case STANDING:
             default:
-                region = standingAnimation.getKeyFrame(animationTimer, true);;
+                region = standingAnimation.getKeyFrame(animationTimer, true);
         }
 
         flipPlayerOnXAxis(region);

@@ -13,6 +13,7 @@ public class Checkpoint extends GameObject {
     private final Animation<TextureRegion> animation;
     private float stateTimer;
     private boolean isActive;
+    private final TextureAtlas atlas;
 
     public Checkpoint(Rectangle rectangle, World world, TextureAtlas atlas) {
         super(
@@ -21,6 +22,7 @@ public class Checkpoint extends GameObject {
         );
 
         animation = makeAnimationByFrameRange(atlas.findRegion("Flag"), 9, 64);
+        this.atlas = atlas;
     }
 
     @Override
@@ -37,10 +39,12 @@ public class Checkpoint extends GameObject {
 
         if (isActive)
             actualRegion = animation.getKeyFrame(stateTimer, true);
+        else
+            actualRegion = atlas.findRegion("No-Flag");
     }
 
     public void createCheckpoint() {
 
-        isActive = true;
+        isActive = !isActive;
     }
 }

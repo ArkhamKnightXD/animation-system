@@ -12,6 +12,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import knight.arkham.objects.Checkpoint;
+import knight.arkham.objects.Enemy;
 import knight.arkham.objects.Player;
 
 import static knight.arkham.helpers.Constants.MID_SCREEN_WIDTH;
@@ -21,35 +24,51 @@ public class TileMapHelper {
     private final World world;
     private final TiledMap tiledMap;
     private final OrthogonalTiledMapRenderer mapRenderer;
+    private final TextureAtlas atlas;
     private final Player player;
+    private final Array<Enemy> enemies;
+    private final Array<Checkpoint> checkpoints;
     private float accumulator;
     private final float TIME_STEP;
 
-    public TileMapHelper(String mapFilePath, TextureAtlas atlas) {
+    public TileMapHelper(String mapFilePath, World world, TextureAtlas atlas) {
 
-        world = new World(new Vector2(0, -20), true);
+        this.world = world;
         tiledMap = new TmxMapLoader().load(mapFilePath);
-        mapRenderer = setupMap();
+        this.atlas = atlas;
         TIME_STEP = 1/240f;
 
-        player = new Player(new Rectangle(450, 50, 32, 32), world, atlas);
+        player = new Player(new Rectangle(450, 50, 32, 32), this.world, atlas);
+        enemies = new Array<>();
+        checkpoints = new Array<>();
+
+        mapRenderer = setupMap();
     }
 
     public OrthogonalTiledMapRenderer setupMap() {
 
         for (MapLayer mapLayer : tiledMap.getLayers())
-            parseMapObjectsToBox2DBodies(mapLayer.getObjects());
+            parseMapObjectsToBox2DBodies(mapLayer.getObjects(), mapLayer.getName());
 
         return new OrthogonalTiledMapRenderer(tiledMap, 1 / PIXELS_PER_METER);
     }
 
-    private void parseMapObjectsToBox2DBodies(MapObjects mapObjects) {
+    private void parseMapObjectsToBox2DBodies(MapObjects mapObjects, String objectsName) {
 
         for (MapObject mapObject : mapObjects) {
 
             Rectangle rectangle = ((RectangleMapObject) mapObject).getRectangle();
 
-            Box2DHelper.createBody(new Box2DBody(getBox2dRectangle(rectangle), world));
+            Rectangle box2DRectangle = getBox2dRectangle(rectangle);
+
+            if (objectsName.equals("Enemies"))
+                enemies.add(new Enemy(box2DRectangle, world, atlas));
+
+            else if (objectsName.equals("Checkpoints"))
+                checkpoints.add(new Checkpoint(box2DRectangle, world, atlas));
+
+            else
+                Box2DHelper.createBody(new Box2DBody(box2DRectangle, world));
         }
     }
 
@@ -95,6 +114,12 @@ public class TileMapHelper {
 
         updateCameraPosition(camera);
 
+        for (Enemy enemy : enemies)
+            enemy.update(deltaTime);
+
+        for (Checkpoint checkpoint : checkpoints)
+            checkpoint.update(deltaTime);
+
         doPhysicsTimeStep(deltaTime);
     }
 
@@ -122,6 +147,12 @@ public class TileMapHelper {
         mapRenderer.getBatch().begin();
 
         player.draw(mapRenderer.getBatch());
+
+        for (Enemy enemy : enemies)
+            enemy.draw(mapRenderer.getBatch());
+
+        for (Checkpoint checkpoint : checkpoints)
+            checkpoint.draw(mapRenderer.getBatch());
 
         mapRenderer.getBatch().end();
     }

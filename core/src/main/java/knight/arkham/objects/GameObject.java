@@ -1,11 +1,14 @@
 package knight.arkham.objects;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public abstract class GameObject {
@@ -52,6 +55,16 @@ public abstract class GameObject {
     }
 
     public Vector2 getWorldPosition() {return body.getPosition();}
+
+    protected Animation<TextureRegion> makeAnimationByFrameRange(TextureRegion characterRegion, int finalFrame, int spriteSize) {
+
+        Array<TextureRegion> animationFrames = new Array<>();
+
+        for (int i = 0; i <= finalFrame; i++)
+            animationFrames.add(new TextureRegion(characterRegion, i * spriteSize, 0, spriteSize, spriteSize));
+
+        return new Animation<>(0.1f, animationFrames);
+    }
 
     public void dispose() {actualRegion.getTexture().dispose();}
 }

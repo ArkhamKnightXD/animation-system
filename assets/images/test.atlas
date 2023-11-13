@@ -1,9 +1,0 @@
-test.png
-size:1024,64
-repeat:none
-Idle
-bounds:388,2,352,32
-Jump
-bounds:742,2,32,32
-Run
-bounds:2,2,384,32

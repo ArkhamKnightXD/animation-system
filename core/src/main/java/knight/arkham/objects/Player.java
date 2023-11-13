@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.helpers.Box2DHelper;
 
@@ -32,28 +31,18 @@ public class Player extends GameObject {
         previousState = AnimationState.STANDING;
         actualState = AnimationState.STANDING;
 
-        standingAnimation = makeAnimationByFrameRange(atlas.findRegion("Idle"), 10);
+        standingAnimation = makeAnimationByFrameRange(atlas.findRegion("Idle"), 10, 32);
 
         jumpingRegion = new TextureRegion(atlas.findRegion("Jump"), 0, 0, 32, 32);
 
-        runningAnimation = makeAnimationByFrameRange(atlas.findRegion("Run"), 10);
-    }
-
-    private Animation<TextureRegion> makeAnimationByFrameRange(TextureRegion characterRegion, int finalFrame) {
-
-        Array<TextureRegion> animationFrames = new Array<>();
-
-        for (int i = 1; i <= finalFrame; i++)
-            animationFrames.add(new TextureRegion(characterRegion, i * 32, 0, 32, 32));
-
-        return new Animation<>(0.1f, animationFrames);
+        runningAnimation = makeAnimationByFrameRange(atlas.findRegion("Run"), 10, 32);
     }
 
     @Override
     protected Body createBody() {
 
         return Box2DHelper.createBody(
-            new Box2DBody(actualBounds, 20, actualWorld, this)
+            new Box2DBody(actualBounds, 10, actualWorld, this)
         );
     }
 

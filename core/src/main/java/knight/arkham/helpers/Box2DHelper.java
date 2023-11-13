@@ -2,10 +2,35 @@ package knight.arkham.helpers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import knight.arkham.objects.Checkpoint;
+import knight.arkham.objects.Enemy;
 import knight.arkham.objects.Player;
 import static knight.arkham.helpers.Constants.*;
 
 public class Box2DHelper {
+
+    public static Body createStaticBody(Box2DBody box2DBody){
+
+        PolygonShape shape = new PolygonShape();
+
+        FixtureDef fixtureDef = createStandardFixtureDef(box2DBody, shape);
+
+        if (box2DBody.userData instanceof Checkpoint)
+            fixtureDef.filter.categoryBits = CHECKPOINT_BIT;
+
+        else
+            fixtureDef.filter.categoryBits = BRICK_BIT;
+
+        Body body = createBox2DBodyByType(box2DBody);
+
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        fixture.setUserData(box2DBody.userData);
+
+        shape.dispose();
+
+        return body;
+    }
 
     private static Body createBox2DBodyByType(Box2DBody box2DBody) {
 
@@ -30,6 +55,9 @@ public class Box2DHelper {
 
         if (box2DBody.userData instanceof Player)
             createPlayerBody(box2DBody, fixtureDef, body);
+
+        else if (box2DBody.userData instanceof Enemy)
+            createEnemyBody(box2DBody, fixtureDef, body);
 
         else {
 
@@ -86,5 +114,42 @@ public class Box2DHelper {
         body.createFixture(fixtureDef).setUserData(box2DBody.userData);
 
         headCollider.dispose();
+    }
+
+    private static void createEnemyBody(Box2DBody box2DBody, FixtureDef fixtureDef, Body body) {
+
+        fixtureDef.filter.categoryBits = ENEMY_BIT;
+
+        fixtureDef.filter.maskBits = (short) (GROUND_BIT | BRICK_BIT | ENEMY_BIT | PLAYER_BIT);
+
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
+
+        PolygonShape headCollider = getEnemyHeadHeadCollider();
+
+        fixtureDef.shape = headCollider;
+
+        fixtureDef.restitution = 1;
+        fixtureDef.filter.categoryBits = ENEMY_HEAD_BIT;
+
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
+
+//        Los shapes deben de ser dispose luego de que el fixture se ha creado, si no el programa fallara.
+        headCollider.dispose();
+    }
+
+    private static PolygonShape getEnemyHeadHeadCollider() {
+
+        PolygonShape head = new PolygonShape();
+
+        Vector2[] vertices = new Vector2[4];
+
+        vertices[0] = new Vector2(-15, 22).scl(1 / PIXELS_PER_METER);
+        vertices[1] = new Vector2(15, 22).scl(1 / PIXELS_PER_METER);
+        vertices[2] = new Vector2(-13, 17).scl(1 / PIXELS_PER_METER);
+        vertices[3] = new Vector2(13, 17).scl(1 / PIXELS_PER_METER);
+
+        head.set(vertices);
+
+        return head;
     }
 }

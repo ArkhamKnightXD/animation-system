@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import knight.arkham.objects.Checkpoint;
+import knight.arkham.objects.structures.Checkpoint;
 import knight.arkham.objects.Enemy;
 import knight.arkham.objects.Player;
 

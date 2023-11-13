@@ -2,14 +2,14 @@ package knight.arkham.helpers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import knight.arkham.objects.Checkpoint;
+import knight.arkham.objects.structures.Checkpoint;
 import knight.arkham.objects.Enemy;
 import knight.arkham.objects.Player;
 import static knight.arkham.helpers.Constants.*;
 
 public class Box2DHelper {
 
-    public static Body createStaticBody(Box2DBody box2DBody){
+    public static Fixture createStaticFixture(Box2DBody box2DBody){
 
         PolygonShape shape = new PolygonShape();
 
@@ -29,7 +29,7 @@ public class Box2DHelper {
 
         shape.dispose();
 
-        return body;
+        return fixture;
     }
 
     private static Body createBox2DBodyByType(Box2DBody box2DBody) {

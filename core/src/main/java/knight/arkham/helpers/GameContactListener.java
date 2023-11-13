@@ -1,8 +1,7 @@
 package knight.arkham.helpers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
-import knight.arkham.objects.Checkpoint;
+import knight.arkham.objects.structures.Checkpoint;
 import knight.arkham.objects.Enemy;
 import static knight.arkham.helpers.Constants.*;
 
@@ -15,9 +14,6 @@ public class GameContactListener implements ContactListener {
         Fixture fixtureB = contact.getFixtureB();
 
         int collisionDefinition = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
-
-        Gdx.app.log("def: ", String.valueOf(fixtureA.getFilterData().categoryBits));
-        Gdx.app.log("def: ", String.valueOf(fixtureB.getFilterData().categoryBits));
 
         switch (collisionDefinition) {
 
@@ -43,24 +39,6 @@ public class GameContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-
-        Fixture fixtureA = contact.getFixtureA();
-        Fixture fixtureB = contact.getFixtureB();
-
-        int collisionDefinition = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
-
-        switch (collisionDefinition) {
-
-            case PLAYER_BIT | CHECKPOINT_BIT:
-
-                if (fixtureA.getFilterData().categoryBits == CHECKPOINT_BIT)
-                    ((Checkpoint) fixtureA.getUserData()).createCheckpoint();
-
-                else
-                    ((Checkpoint) fixtureB.getUserData()).createCheckpoint();
-                break;
-
-        }
 
     }
 

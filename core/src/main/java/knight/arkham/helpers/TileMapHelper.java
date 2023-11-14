@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.Array;
 import knight.arkham.objects.structures.Checkpoint;
 import knight.arkham.objects.Enemy;
 import knight.arkham.objects.Player;
-
 import static knight.arkham.helpers.Constants.MID_SCREEN_WIDTH;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
@@ -33,16 +32,17 @@ public class TileMapHelper {
 
     public TileMapHelper(String mapFilePath, World world, TextureAtlas atlas) {
 
-        this.world = world;
         tiledMap = new TmxMapLoader().load(mapFilePath);
+        this.world = world;
         this.atlas = atlas;
-        TIME_STEP = 1/240f;
 
         player = new Player(new Rectangle(450, 50, 32, 32), world, atlas);
         enemies = new Array<>();
         checkpoints = new Array<>();
 
         mapRenderer = setupMap();
+
+        TIME_STEP = 1/240f;
     }
 
     public OrthogonalTiledMapRenderer setupMap() {

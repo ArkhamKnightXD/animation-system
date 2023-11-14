@@ -31,11 +31,11 @@ public class Player extends GameObject {
         previousState = AnimationState.STANDING;
         actualState = AnimationState.STANDING;
 
-        standingAnimation = makeAnimationByFrameRange(atlas.findRegion("Idle"), 10, 32);
+        standingAnimation = makeAnimationByFrameRange(atlas.findRegion("Idle"), 5, 32, 32);
 
         jumpingRegion = new TextureRegion(atlas.findRegion("Jump"), 0, 0, 32, 32);
 
-        runningAnimation = makeAnimationByFrameRange(atlas.findRegion("Run"), 10, 32);
+        runningAnimation = makeAnimationByFrameRange(atlas.findRegion("Run"), 5, 32, 32);
     }
 
     @Override

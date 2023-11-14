@@ -56,12 +56,12 @@ public abstract class GameObject {
 
     public Vector2 getWorldPosition() {return body.getPosition();}
 
-    protected Animation<TextureRegion> makeAnimationByFrameRange(TextureRegion characterRegion, int finalFrame, int spriteSize) {
+    protected Animation<TextureRegion> makeAnimationByFrameRange(TextureRegion characterRegion, int finalFrame, int width, int height) {
 
         Array<TextureRegion> animationFrames = new Array<>();
 
         for (int i = 0; i <= finalFrame; i++)
-            animationFrames.add(new TextureRegion(characterRegion, i * spriteSize, 0, spriteSize, spriteSize));
+            animationFrames.add(new TextureRegion(characterRegion, i * width, 0, width, height));
 
         return new Animation<>(0.1f, animationFrames);
     }

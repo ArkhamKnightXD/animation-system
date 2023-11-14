@@ -38,7 +38,7 @@ public class TileMapHelper {
         this.atlas = atlas;
         TIME_STEP = 1/240f;
 
-        player = new Player(new Rectangle(450, 50, 32, 32), this.world, atlas);
+        player = new Player(new Rectangle(450, 50, 32, 32), world, atlas);
         enemies = new Array<>();
         checkpoints = new Array<>();
 

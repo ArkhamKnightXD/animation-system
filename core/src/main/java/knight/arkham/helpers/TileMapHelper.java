@@ -27,6 +27,8 @@ public class TileMapHelper {
     private final Player player;
     private final Array<Enemy> enemies;
     private final Array<Checkpoint> checkpoints;
+    private int frontBounds;
+    private int backBounds;
     private float accumulator;
     private final float TIME_STEP;
 
@@ -41,6 +43,9 @@ public class TileMapHelper {
         checkpoints = new Array<>();
 
         mapRenderer = setupMap();
+
+        frontBounds = 900;
+        backBounds = 450;
 
         TIME_STEP = 1/240f;
     }
@@ -80,7 +85,7 @@ public class TileMapHelper {
         );
     }
 
-    public boolean isPlayerInsideMapBounds(Vector2 playerPixelPosition) {
+    private boolean isPlayerInsideMapBounds(Vector2 playerPosition) {
 
         MapProperties properties = tiledMap.getProperties();
 
@@ -89,7 +94,7 @@ public class TileMapHelper {
 
         int mapPixelWidth = mapWidth * tilePixelWidth;
 
-        return playerPixelPosition.x > MID_SCREEN_WIDTH && playerPixelPosition.x < mapPixelWidth - MID_SCREEN_WIDTH;
+        return playerPosition.x > MID_SCREEN_WIDTH && playerPosition.x < mapPixelWidth - MID_SCREEN_WIDTH;
     }
 
     public void updateCameraPosition(OrthographicCamera camera) {
@@ -102,8 +107,22 @@ public class TileMapHelper {
 
         boolean isPlayerInsideMapBounds = isPlayerInsideMapBounds(player.getPixelPosition());
 
-        if (isPlayerInsideMapBounds)
+        Vector2 actualPosition = player.getPixelPosition();
+
+        if (actualPosition.x > frontBounds) {
             camera.position.set(player.getWorldPosition().x, 8.5f, 0);
+
+            frontBounds += 450;
+            backBounds += 450;
+        }
+
+        if (actualPosition.x < backBounds) {
+
+            camera.position.set(player.getWorldPosition().x, 8.5f, 0);
+
+            frontBounds -= 450;
+            backBounds -= 450;
+        }
 
         camera.update();
     }
@@ -134,7 +153,6 @@ public class TileMapHelper {
             accumulator -= TIME_STEP;
         }
     }
-
 
     public void draw(OrthographicCamera camera){
 
